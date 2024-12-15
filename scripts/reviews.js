@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     const reviewsContainer = document.getElementById("reviews-container");
     const preloader = document.getElementById("preloader");
+    const loadMoreButton = document.getElementById("load-more");
+
+    let currentPage = 1;
+    const reviewsPerPage = 20;
+    let reviews = [];
 
     // Функция для загрузки отзывов
     async function fetchReviews() {
@@ -16,30 +21,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error("Ошибка при загрузке отзывов");
             }
 
-            const reviews = await response.json();
+            reviews = await response.json();
 
             // Скрываем прелоадер
             preloader.style.display = "none";
 
-            // Отображаем отзывы
-            renderReviews(reviews);
+            // Отображаем начальные 20 отзывов
+            renderReviews(currentPage);
+
+            // Показываем кнопку для загрузки дополнительных отзывов
+            loadMoreButton.style.display = "block";
+
         } catch (error) {
             // Скрываем прелоадер и показываем сообщение об ошибке
             preloader.style.display = "none";
-            reviewsContainer.innerHTML = `<p class=\"error\">⚠ Что-то пошло не так: ${error.message}</p>`;
+            reviewsContainer.innerHTML = `<p class="error">⚠ Что-то пошло не так: ${error.message}</p>`;
         }
     }
 
     // Функция для рендера отзывов
-    function renderReviews(reviews) {
-        reviewsContainer.innerHTML = ""; // Очищаем контейнер
+    function renderReviews(page) {
+        const startIndex = (page - 1) * reviewsPerPage;
+        const endIndex = page * reviewsPerPage;
 
-        if (reviews.length === 0) {
-            reviewsContainer.innerHTML = "<p>Отзывы не найдены.</p>";
-            return;
-        }
+        const reviewsToDisplay = reviews.slice(startIndex, endIndex);
 
-        reviews.forEach(review => {
+        reviewsToDisplay.forEach(review => {
             const reviewElement = document.createElement("div");
             reviewElement.classList.add("review-card");
 
@@ -52,6 +59,17 @@ document.addEventListener("DOMContentLoaded", () => {
             reviewsContainer.appendChild(reviewElement);
         });
     }
+
+    // Функция для загрузки дополнительных отзывов
+    loadMoreButton.addEventListener("click", () => {
+        currentPage++;
+        renderReviews(currentPage);
+
+        // Если все отзывы загружены, скрываем кнопку
+        if (currentPage * reviewsPerPage >= reviews.length) {
+            loadMoreButton.style.display = "none";
+        }
+    });
 
     // Загружаем отзывы при загрузке страницы
     fetchReviews();

@@ -296,3 +296,29 @@ article p {
     flex-direction: column;
     min-height: 100vh;
 }
+
+.load-more {
+    background-color: rgba(255, 215, 0, 0.7);
+    color: white;
+    font-size: 16px;
+    padding: 12px 20px;
+    border: 2px solid rgba(255, 215, 0, 0.7);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 250px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.load-more:hover {
+    background-color: #FFD700;
+    transform: scale(1.05);
+}
+
+.load-more:active {
+    background-color: #FFB800;
+}

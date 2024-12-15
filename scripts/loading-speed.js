@@ -1,11 +1,16 @@
 (function() {
-    const startTime = performance.now();
+    let startTime;
+
+    window.addEventListener('DOMContentLoaded', () => {
+        startTime = performance.now();
+    });
 
     function displayLoadingTime() {
-        const endTime = performance.now();
-        const loadingTime = (endTime - startTime).toFixed(2);
-
-        document.getElementById('time').innerText = `${loadingTime} ms`;
+        if (startTime) {
+            const endTime = performance.now();
+            const loadingTime = (endTime - startTime).toFixed(2);
+            document.getElementById('time').innerText = `${loadingTime} ms`;
+        }
     }
 
     window.addEventListener('load', displayLoadingTime);
