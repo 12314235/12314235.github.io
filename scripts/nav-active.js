@@ -7,3 +7,15 @@ navLinks.forEach(link => {
         link.classList.add('active-href');
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const drinkCards = document.querySelectorAll(".drink-card");
+
+    drinkCards.forEach(card => {
+        card.addEventListener("click", () => {
+            // Перенаправляем пользователя на страницу отзывов
+            window.location.href = "reviews.html";
+        });
+    });
+});
+

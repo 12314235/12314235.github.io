@@ -1,14 +1,43 @@
-// Обработка отправки формы
 const form = document.getElementById("cart-form");
 const cartContainer = document.getElementById("cart-container");
 const saveCartButton = document.getElementById("save-cart");
 const loadCartButton = document.getElementById("load-cart");
+const itemNameSelect = document.getElementById("item-name");
 
-let cart = []; // Массив для хранения элементов корзины
+let cart = [];
 
-// Функция для отображения корзины
+async function loadDrinksFromIndex() {
+    try {
+        const response = await fetch("index.html");
+        const html = await response.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        const cards = doc.querySelectorAll(".drink-card h3");
+
+        if (cards.length === 0) {
+            throw new Error("Товары не найдены на странице index.html");
+        }
+
+        cards.forEach(card => {
+            const option = document.createElement("option");
+            option.value = card.textContent.trim();
+            option.textContent = card.textContent.trim();
+            itemNameSelect.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("Ошибка загрузки товаров:", error);
+        const errorOption = document.createElement("option");
+        errorOption.value = "";
+        errorOption.textContent = "Ошибка загрузки товаров";
+        itemNameSelect.appendChild(errorOption);
+    }
+}
+
 function renderCart() {
-    cartContainer.innerHTML = ""; // Очищаем контейнер
+    cartContainer.innerHTML = "";
     if (cart.length === 0) {
         cartContainer.innerHTML = "<p>Корзина пуста.</p>";
         return;
@@ -37,7 +66,6 @@ function renderCart() {
 
     cartContainer.appendChild(table);
 
-    // Добавляем обработчики удаления
     document.querySelectorAll(".delete-btn").forEach(button => {
         button.addEventListener("click", (e) => {
             const index = e.target.dataset.index;
@@ -47,7 +75,6 @@ function renderCart() {
     });
 }
 
-// Обработчик отправки формы
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -55,19 +82,22 @@ form.addEventListener("submit", (e) => {
     const itemQuantity = parseInt(document.getElementById("item-quantity").value);
     const itemPrice = parseFloat(document.getElementById("item-price").value);
 
+    if (!itemName || isNaN(itemQuantity) || isNaN(itemPrice) || itemQuantity <= 0 || itemPrice < 0) {
+        alert("Пожалуйста, заполните все поля корректно.");
+        return;
+    }
+
     cart.push({ name: itemName, quantity: itemQuantity, price: itemPrice });
     renderCart();
 
     form.reset();
 });
 
-// Сохранение корзины в LocalStorage
 saveCartButton.addEventListener("click", () => {
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Корзина сохранена!");
 });
 
-// Загрузка корзины из LocalStorage
 loadCartButton.addEventListener("click", () => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
@@ -79,5 +109,5 @@ loadCartButton.addEventListener("click", () => {
     }
 });
 
-// Инициализация отображения пустой корзины
+loadDrinksFromIndex();
 renderCart();
