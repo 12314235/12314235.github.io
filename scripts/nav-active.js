@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     drinkCards.forEach(card => {
         card.addEventListener("click", () => {
-            // Перенаправляем пользователя на страницу отзывов
             window.location.href = "reviews.html";
         });
     });

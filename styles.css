@@ -322,3 +322,29 @@ article p {
 .load-more:active {
     background-color: #FFB800;
 }
+
+.swiper-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 30px;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.swiper-button-next {
+    right: 10px;
+}
+
+.swiper-button-prev {
+    left: 10px;
+}
