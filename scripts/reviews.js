@@ -7,15 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const reviewsPerPage = 20;
     let reviews = [];
 
-    // Функция для загрузки отзывов
     async function fetchReviews() {
         try {
-            // Показываем прелоадер
             preloader.style.display = "block";
 
-            // Генерируем случайное условие (id > 100 или id <= 100)
-            const randomFilter = Math.random() > 0.5 ? "?id_gte=100" : "?id_lte=100";
-            const response = await fetch(`https://jsonplaceholder.typicode.com/comments${randomFilter}`);
+            const response = await fetch(`https://jsonplaceholder.typicode.com/comments${20}`);
 
             if (!response.ok) {
                 throw new Error("Ошибка при загрузке отзывов");
@@ -23,23 +19,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             reviews = await response.json();
 
-            // Скрываем прелоадер
             preloader.style.display = "none";
 
-            // Отображаем начальные 20 отзывов
             renderReviews(currentPage);
 
-            // Показываем кнопку для загрузки дополнительных отзывов
             loadMoreButton.style.display = "block";
 
         } catch (error) {
-            // Скрываем прелоадер и показываем сообщение об ошибке
             preloader.style.display = "none";
             reviewsContainer.innerHTML = `<p class="error">⚠ Что-то пошло не так: ${error.message}</p>`;
         }
     }
 
-    // Функция для рендера отзывов
     function renderReviews(page) {
         const startIndex = (page - 1) * reviewsPerPage;
         const endIndex = page * reviewsPerPage;
@@ -60,17 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Функция для загрузки дополнительных отзывов
     loadMoreButton.addEventListener("click", () => {
         currentPage++;
         renderReviews(currentPage);
 
-        // Если все отзывы загружены, скрываем кнопку
         if (currentPage * reviewsPerPage >= reviews.length) {
             loadMoreButton.style.display = "none";
         }
     });
 
-    // Загружаем отзывы при загрузке страницы
     fetchReviews();
 });
